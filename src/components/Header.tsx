@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export function makeIsActive(path: string) {
   return function isActive(match: any, location: { pathname: string }) {
@@ -12,7 +12,7 @@ export const Header = () => (
     <NavLink
       activeClassName="Header__navlink--active"
       className="Header__navlink"
-      to="/news"
+      to="/news/1"
       isActive={makeIsActive("/news")}
     >
       Top
@@ -20,7 +20,7 @@ export const Header = () => (
     <NavLink
       activeClassName="Header__navlink--active"
       className="Header__navlink"
-      to="/newest"
+      to="/newest/1"
       isActive={makeIsActive("/newest")}
     >
       New
@@ -49,12 +49,5 @@ export const Header = () => (
     >
       Jobs
     </NavLink>
-    <a
-      href="https://github.com/taehwanno/hnpwa-react"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <span className="Header__title">HNPWA with React</span>
-    </a>
   </nav>
 );

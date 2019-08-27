@@ -1,51 +1,103 @@
-import { observable } from "mobx";
+import { observable, action, extendObservable } from "mobx";
+
+export interface CommentType {
+  id: number;
+  level: number;
+  user: string;
+  time: number;
+  time_ago: string;
+  content: string;
+  comments: CommentType[];
+}
 
 export interface NewsItem {
-  id: string;
+  id: number;
   title: string;
   points: number;
   user: string;
   time: number;
   time_Ago: string;
   comments_count: number;
+  comments: CommentType[];
   type: string;
   url: string;
   domanin: string;
 }
 
 const fetchItems = (type: string, page: number): Promise<NewsItem[]> => {
-  return fetch(`https://node-hnapi.herokuapp.com/${type}?page=${page}`)
-    .then((response) => {
-      if(!response.ok) {
-        throw new Error(response.statusText)
+  return fetch(`https://node-hnapi.herokuapp.com/${type}?page=${page}`).then(
+    response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
       return response.json() as Promise<NewsItem[]>;
-    })
+    }
+  );
+};
+
+const fetchItem = (id: number): Promise<NewsItem> => {
+  return fetch(`https://node-hnapi.herokuapp.com/item/${id}`).then(response => {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response.json() as Promise<NewsItem>;
+  });
 };
 
 export default class NewsStore {
-  @observable news: NewsItem[] = [];
-  @observable newest: NewsItem[] = [];
-  @observable isLoading: boolean = true;
+  @observable news: NewsItem[][] = new Array(10);
+  @observable newest: NewsItem[][] = new Array(10);
+  @observable isLoading: boolean = false;
+  @observable requestCount: number = 0;
+  @observable items: NewsItem[] = [];
 
-  constructor() {
-    this.loadNews();
-    this.loadNewest();
+  @action
+  loadNewest(page: number) {
+    this.isLoading = true;
+    this.requestCount++;
+    fetchItems("newest", page)
+      .then(newest => {
+        this.newest[page] = newest;
+        if (--this.requestCount === 0) this.isLoading = false;
+      })
+      .catch(e => {
+        if (--this.requestCount === 0) this.isLoading = false;
+        this.newest[page] = [];
+      });
   }
 
-  loadNewest() {
+  @action
+  loadNews(page: number) {
     this.isLoading = true;
-    fetchItems('newest', 1).then((newest) => {
-      this.newest = newest;
-      this.isLoading = false;
-    });
+    this.requestCount++;
+    fetchItems("news", page)
+      .then(news => {
+        this.news[page] = news;
+        if (--this.requestCount === 0) this.isLoading = false;
+      })
+      .catch(e => {
+        if (--this.requestCount === 0) this.isLoading = false;
+        this.news[page] = [];
+      });
   }
 
-  loadNews() {
+  @action
+  loadItem(id: number) {
     this.isLoading = true;
-    fetchItems('news', 1).then((news) => {
-      this.news = news;
-      this.isLoading = false;
-    });
+    this.requestCount++;
+
+    fetchItem(id)
+      .then(item => {
+        const existingItem = this.items.find(item => item.id === id);
+        if (existingItem) {
+          extendObservable(existingItem, item);
+        } else {
+          this.items.push(item);
+        }
+        if (--this.requestCount === 0) this.isLoading = false;
+      })
+      .catch(e => {
+        if (--this.requestCount === 0) this.isLoading = false;
+      });
   }
 }

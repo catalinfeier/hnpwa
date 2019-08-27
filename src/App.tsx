@@ -1,14 +1,12 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { Switch, Route } from "react-router";
-import { inject, observer } from "mobx-react";
+import { Switch, Route, Redirect } from "react-router";
 import { Header } from "./components/Header";
-import NewsStore, { NewsItem } from "./stores/NewsStore";
+import NewsStore from "./stores/NewsStore";
 import { TopStories } from "./components/TopStories";
-import { Provider } from "mobx-react";
+import { Provider, inject } from "mobx-react";
 import { NewestStories } from "./components/NewestStories";
-
+import {Item} from './components/Item'
 class App extends React.Component<any, any> {
   newsStore = new NewsStore();
 
@@ -16,21 +14,18 @@ class App extends React.Component<any, any> {
     return (
       <div className="App">
         <Header />
+        <Provider store={this.newsStore}>
+          <Switch>
+            <Route path="/news/:page" component={TopStories}></Route>
+            <Route path="/newest/:page" component={NewestStories}></Route>
+            <Route path="/show/" component={() => <div>show</div>}></Route>
+            <Route path="/ask/" component={() => <div>ask</div>}></Route>
+            <Route path="/jobs/" component={() => <div>jobs</div>}></Route>
+            <Route path="/item/:id" component={Item}></Route>
+            <Route path="/" component={() => <Redirect to="/news/1"/>}></Route>
 
-        <Switch>
-          <Route
-            path="/news/"
-            component={() => <TopStories store={this.newsStore} />}
-          ></Route>
-          <Route
-            path="/newest/"
-            component={() => <NewestStories store={this.newsStore} />}
-          ></Route>
-          <Route path="/show/" component={() => <div>show</div>}></Route>
-          <Route path="/ask/" component={() => <div>ask</div>}></Route>
-          <Route path="/jobs/" component={() => <div>jobs</div>}></Route>
-          <Route path="/" component={() => <div>Home Page</div>}></Route>
-        </Switch>
+          </Switch>
+        </Provider>
       </div>
     );
   }
