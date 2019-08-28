@@ -1,19 +1,20 @@
 import React from "react";
 import { NewsItem } from "../stores/NewsStore";
-import { NavLink } from "react-router-dom";
+import {Container} from './SharedStyles'
+import { Item } from "./Item";
 
 export const ItemList: React.FC<{ items: NewsItem[] }> = props => {
   const { items } = props;
   return (
-    <React.Fragment>
+    <Container>
+      {
+        items.length === 0 && (
+          "No items found."
+        )
+      }
       {items.map((item: NewsItem) => (
-        <div key={item.id}>
-          Title:{item.title}
-          <div>
-            <NavLink to={`/item/${item.id}`}>{item.comments_count} comments</NavLink>
-          </div>
-        </div>
+        <Item key={item.id} item={item} />
       ))}
-    </React.Fragment>
+    </Container>
   );
 };

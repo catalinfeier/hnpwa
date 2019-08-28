@@ -1,36 +1,44 @@
 import React from "react";
-import { observer, inject } from "mobx-react";
-import NewsStore from "../stores/NewsStore";
-import { match } from "react-router-dom";
-import { Comment } from "./Comment";
+import styled from "styled-components";
+import { NewsItem } from "../stores/NewsStore";
+import { NavLink } from "react-router-dom";
 
-export const Item = inject("store")(
-  observer(
-    class TopStories extends React.Component<{
-      store?: NewsStore;
-      match: match<{ id: string }>;
-      history: { push: Function };
-    }> {
-      componentDidMount() {
-        const id = Number(this.props.match.params.id);
-        this.props.store!.loadItem(id);
-      }
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+`;
 
-      render() {
-        const id = Number(this.props.match.params.id);
-        const { isLoading, items } = this.props.store!;
-        const item = items.find(item => item.id === id);
-        if (isLoading || !item) return <div>Loading...</div>;
+const StyledLink = styled.a`
+  color: black;
+  text-decoration: none;
+  text-align: left;
+`;
 
-        return (
-          <div>
-            {item.id}
-            {item.comments.map(comment => (
-              <Comment key={comment.id} comment={comment} />
-            ))}
-          </div>
-        );
-      }
-    }
-  )
-);
+const StyledNavLink = styled(NavLink)`
+  margin: 0 5px 0 5px;
+`;
+
+const Meta = styled.div`
+  display: flex;
+  font-size: 13px;
+  color: #060505b3;
+  margin-top: 10px;
+`;
+
+export const Item = (props: { item: NewsItem }) => {
+  const { item } = props;
+  return (
+    <Container>
+      <StyledLink href={item.url}>{item.title}</StyledLink>
+      <Meta>
+        {`${item.points} points by `}
+        <StyledNavLink to={`/user/${item.user}`}>{item.user}</StyledNavLink>
+        {`${item.time_ago} | `}
+        <StyledNavLink to={`/item/${item.id}`}>
+          {` ${item.comments_count} comments`}
+        </StyledNavLink>
+      </Meta>
+    </Container>
+  );
+};

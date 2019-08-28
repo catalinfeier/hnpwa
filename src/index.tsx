@@ -3,26 +3,9 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { createBrowserHistory } from "history";
-import { RouterStore, syncHistoryWithStore } from "mobx-react-router";
-import { Provider } from "mobx-react";
-import { Router } from "react-router";
 
-const browserHistory = createBrowserHistory();
-const routingStore = new RouterStore();
-const stores = {
-  routingStore
-};
-const history = syncHistoryWithStore(browserHistory, routingStore);
 
-ReactDOM.render(
-  <Provider {...stores}>
-    <Router history={history}>
-      <App />
-    </Router>
-  </Provider>,
-  document.getElementById("root")
-);
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -1,6 +1,25 @@
-import React, { FC } from "react";
-import { inject, observer } from "mobx-react";
-import { withRouter, matchPath } from "react-router-dom";
+import React from "react";
+import { withRouter } from "react-router-dom";
+import styled from "styled-components";
+
+const Container = styled.section`
+  padding: 15px 0;
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+`;
+
+const Button = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
 
 class Pagination extends React.Component<any, any> {
   render() {
@@ -8,21 +27,25 @@ class Pagination extends React.Component<any, any> {
     const hasPrevious: boolean = currentPage > 1;
     const hasNext: boolean = currentPage < 10;
     return (
-      <div>
-        <button
+      <Container>
+        <Button
           disabled={!hasPrevious}
           onClick={() => {
             this.props.onChange(currentPage - 1);
           }}
         >
-          {"<"}
-        </button>
-        {currentPage} / 10 <button disabled={!hasNext}
-        onClick={() => {
-          this.props.onChange(currentPage + 1);
-        }}
-        >></button>
-      </div>
+          {"< Prev"}
+        </Button>
+        {currentPage} / 10{" "}
+        <Button
+          disabled={!hasNext}
+          onClick={() => {
+            this.props.onChange(currentPage + 1);
+          }}
+        >
+          Next >
+        </Button>
+      </Container>
     );
   }
 }

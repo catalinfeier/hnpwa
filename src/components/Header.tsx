@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import styled from 'styled-components'
 
 export function makeIsActive(path: string) {
   return function isActive(match: any, location: { pathname: string }) {
@@ -7,47 +8,50 @@ export function makeIsActive(path: string) {
   };
 }
 
+const NavContainer = styled.nav`
+  padding: 20px 0;
+  background: #20232a;
+`
+
+const LinkElem = styled(NavLink)`
+  &.active {
+    color: #61dafb;
+  }
+  color: white;
+  padding: 10px;
+`
+
 export const Header = () => (
-  <nav className="Header">
-    <NavLink
-      activeClassName="Header__navlink--active"
-      className="Header__navlink"
+  <NavContainer>
+    <LinkElem
       to="/news/1"
       isActive={makeIsActive("/news")}
     >
       Top
-    </NavLink>
-    <NavLink
-      activeClassName="Header__navlink--active"
-      className="Header__navlink"
+    </LinkElem>
+    <LinkElem
       to="/newest/1"
       isActive={makeIsActive("/newest")}
     >
       New
-    </NavLink>
-    <NavLink
-      activeClassName="Header__navlink--active"
-      className="Header__navlink"
+    </LinkElem>
+    <LinkElem
       to="/show/1"
       isActive={makeIsActive("/show")}
     >
       Show
-    </NavLink>
-    <NavLink
-      activeClassName="Header__navlink--active"
-      className="Header__navlink"
+    </LinkElem>
+    <LinkElem
       to="/ask/1"
       isActive={makeIsActive("/ask")}
     >
       Ask
-    </NavLink>
-    <NavLink
-      activeClassName="Header__navlink--active"
-      className="Header__navlink"
+    </LinkElem>
+    <LinkElem
       to="/jobs/1"
       isActive={makeIsActive("/jobs")}
     >
       Jobs
-    </NavLink>
-  </nav>
+    </LinkElem>
+  </NavContainer>
 );
