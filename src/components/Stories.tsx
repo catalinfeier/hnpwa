@@ -4,41 +4,37 @@ import NewsStore from "../stores/NewsStore";
 import { ItemList } from "./ItemList";
 import { match } from "react-router-dom";
 import Pagination from "./Pagination";
-import {Loading} from './Loading'
+import { Loading } from "./Loading";
 
-export const JobsStories = inject("store")(
+export const Stories =inject("store")(
   observer(
-    class JobsStories extends React.Component<{
+    class TopStories extends React.Component<{
       store?: NewsStore;
       match: match<{ page: string }>;
       history: { push: Function };
+      type: string;
     }> {
       componentDidMount() {
         const page = Number(this.props.match.params.page);
-        if (!this.props.store!.jobs[page] && page > 0 && page <= 10) {
-          this.props.store!.loadJobs(page);
-        }
+        this.props.store!.loadPage(this.props.type, page);
       }
 
-      onPageChange = (page: number) => {
-        const { history } = this.props;
-        if (!this.props.store!.jobs[page]) {
-          this.props.store!.loadJobs(page);
-        }
-        history.push(`/jobs/${page}`);
+      onPageChange = (index: number) => {
+        this.props.store!.loadPage(this.props.type, index);
+        this.props.history.push(`/${this.props.type}/${index}`);
       };
 
       render() {
-        const { isLoading, jobs } = this.props.store!;
-        const page = Number(this.props.match.params.page);
-
+        const { isLoading } = this.props.store!;
+        const index = Number(this.props.match.params.page);
+        const page = this.props.store!.page(this.props.type, index)
         return (
           <div>
             <Pagination onChange={this.onPageChange} />
-            {isLoading || !jobs[page] ? (
+            {isLoading || !page ? (
               <Loading />
             ) : (
-              <ItemList items={jobs[page]} />
+              <ItemList items={page.items} />
             )}
           </div>
         );

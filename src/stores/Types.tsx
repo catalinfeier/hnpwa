@@ -1,4 +1,3 @@
-
 export interface CommentType {
   id: number;
   level: number;
@@ -21,6 +20,12 @@ export interface NewsItem {
   type: string;
   url: string;
   domanin: string;
+}
+
+export interface PageList {
+  items: NewsItem[];
+  type: string;
+  index: number;
 }
 
 export interface User {

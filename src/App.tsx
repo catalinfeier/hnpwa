@@ -3,14 +3,10 @@ import "./App.css";
 import { Switch, Route, Redirect } from "react-router";
 import { Header } from "./components/Header";
 import NewsStore from "./stores/NewsStore";
-import { TopStories } from "./components/TopStories";
+import { Stories } from "./components/Stories";
 import { Provider } from "mobx-react";
-import { NewestStories } from "./components/NewestStories";
 import { ItemWithComments } from "./components/ItemWithComments";
 import { UserDetails } from "./components/UserDetails";
-import { ShowStories } from "./components/ShowStories";
-import { AskStories } from "./components/AskStories";
-import { JobsStories } from "./components/JobsStories";
 import { createBrowserHistory } from "history";
 import { RouterStore, syncHistoryWithStore } from "mobx-react-router";
 import { Router } from "react-router";
@@ -29,13 +25,38 @@ class App extends React.Component<any, any> {
         <Router history={history}>
           <div className="App">
             <Header />
-            <Provider >
+            <Provider>
               <Switch>
-                <Route path="/news/:page" component={TopStories}></Route>
-                <Route path="/newest/:page" component={NewestStories}></Route>
-                <Route path="/show/:page" component={ShowStories}></Route>
-                <Route path="/ask/:page" component={AskStories}></Route>
-                <Route path="/jobs/:page" component={JobsStories}></Route>
+                <Route
+                  path="/news/:page"
+                  render={props => (
+                    <Stories {...props} type="news" key="newsStories" />
+                  )}
+                ></Route>
+                <Route
+                  path="/newest/:page"
+                  render={props => (
+                    <Stories {...props} type="newest" key="newestStories" />
+                  )}
+                ></Route>
+                <Route
+                  path="/show/:page"
+                  render={props => (
+                    <Stories {...props} type="show" key="showStories" />
+                  )}
+                ></Route>
+                <Route
+                  path="/ask/:page"
+                  render={props => (
+                    <Stories {...props} type="ask" key="askStories" />
+                  )}
+                ></Route>
+                <Route
+                  path="/jobs/:page"
+                  render={props => (
+                    <Stories {...props} type="jobs" key="jobsStories" />
+                  )}
+                ></Route>
                 <Route path="/item/:id" component={ItemWithComments}></Route>
                 <Route path="/user/:id" component={UserDetails}></Route>
                 <Route
