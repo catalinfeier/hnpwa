@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {Comment} from './Comment'
 import {storiesOf} from '@storybook/react'
-import { CommentType } from '../stores/NewsStore';
+import { CommentType } from '../stores/Types';
 
 const comment: CommentType = {
   id: 1234,

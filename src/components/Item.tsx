@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { NewsItem } from "../stores/NewsStore";
+import { NewsItem } from "../stores/Types";
 import { NavLink } from "react-router-dom";
 
 const Container = styled.div`

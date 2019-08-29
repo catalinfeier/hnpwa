@@ -40,7 +40,7 @@ class App extends React.Component<any, any> {
                 <Route path="/user/:id" component={UserDetails}></Route>
                 <Route
                   path="/"
-                  component={() => <Redirect to="/news/" />}
+                  component={() => <Redirect to="/news/1" />}
                 ></Route>
               </Switch>
             </Provider>

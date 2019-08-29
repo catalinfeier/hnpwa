@@ -1,67 +1,6 @@
 import { observable, action, extendObservable } from "mobx";
-
-export interface CommentType {
-  id: number;
-  level: number;
-  user: string;
-  time: number;
-  time_ago: string;
-  content: string;
-  comments: CommentType[];
-}
-
-export interface NewsItem {
-  id: number;
-  title: string;
-  points: number;
-  user: string;
-  time: number;
-  time_ago: string;
-  comments_count: number;
-  comments: CommentType[];
-  type: string;
-  url: string;
-  domanin: string;
-}
-
-export interface User {
-  id: string;
-  created_time: number;
-  created: string;
-  karma: number;
-  avg: string;
-  about: string;
-}
-
-const fetchItems = (type: string, page: number): Promise<NewsItem[]> => {
-  return fetch(`https://node-hnapi.herokuapp.com/${type}?page=${page}`).then(
-    response => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return response.json() as Promise<NewsItem[]>;
-    }
-  );
-};
-
-const fetchItem = (id: number): Promise<NewsItem> => {
-  return fetch(`https://node-hnapi.herokuapp.com/item/${id}`).then(response => {
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    return response.json() as Promise<NewsItem>;
-  });
-};
-
-const fetchUser = (id: string): Promise<User> => {
-  return fetch(`https://node-hnapi.herokuapp.com/user/${id}`).then(
-    response => {
-      if (!response.ok) throw new Error(response.statusText);
-      return response.json() as Promise<User>;
-    }
-  );
-};
-
+import { fetchItem, fetchItems, fetchUser } from './UtilityFunctions'
+import {NewsItem, User} from './Types'
 export default class NewsStore {
   @observable news: NewsItem[][] = new Array(10);
   @observable newest: NewsItem[][] = new Array(10);
@@ -174,10 +113,9 @@ export default class NewsStore {
     this.requestCount++;
     fetchUser(id).then(user => {
       const existingUser = this.users.find(user => user.id === id);
-      console.log('existing user', existingUser)
       if(existingUser) {
         extendObservable(existingUser, user);
-      }else {
+      } else {
         this.users.push(user);
       }
 

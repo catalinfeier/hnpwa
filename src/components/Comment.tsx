@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CommentType } from "../stores/NewsStore";
+import { CommentType } from "../stores/Types";
 import styled from "styled-components";
 import { Divider } from "./SharedStyles";
 

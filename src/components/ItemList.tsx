@@ -1,5 +1,5 @@
 import React from "react";
-import { NewsItem } from "../stores/NewsStore";
+import { NewsItem } from "../stores/Types";
 import {Container} from './SharedStyles'
 import { Item } from "./Item";
 
