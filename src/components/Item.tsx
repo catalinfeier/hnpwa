@@ -32,8 +32,14 @@ export const Item = (props: { item: NewsItem }) => {
     <Container>
       <StyledLink href={item.url}>{item.title}</StyledLink>
       <Meta>
-        {`${item.points} points by `}
-        <StyledNavLink to={`/user/${item.user}`}>{item.user}</StyledNavLink>
+        {item.points && `${item.points} points `}
+        {item.user && (
+          <React.Fragment>
+            {` by `}
+            <StyledNavLink to={`/user/${item.user}`}>{item.user}</StyledNavLink>
+          </React.Fragment>
+        )}
+
         {`${item.time_ago} | `}
         <StyledNavLink to={`/item/${item.id}`}>
           {` ${item.comments_count} comments`}
